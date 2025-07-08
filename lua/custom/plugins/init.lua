@@ -2,7 +2,9 @@ return {
   {
     'supermaven-inc/supermaven-nvim',
     config = function()
-      require('supermaven-nvim').setup {}
+      require('supermaven-nvim').setup {
+        ignore_filetypes = { 'rs' }, -- ignore rust files because im learning the language
+      }
     end,
   },
   {
