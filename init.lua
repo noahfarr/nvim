@@ -80,6 +80,25 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Switch to normal mode when pressing jj in insert mode
 vim.keymap.set('i', 'jj', '<Esc>')
+vim.keymap.set('i', 'jk', '<Esc>')
+
+-- Make <C-n>/<C-p> jump between search results
+-- Works in normal, visual and operator-pending modes
+vim.keymap.set({ 'n', 'x', 'o' }, '<C-n>', 'nzzzv', { silent = true, desc = 'Next search result' })
+vim.keymap.set({ 'n', 'x', 'o' }, '<C-p>', 'Nzzzv', { silent = true, desc = 'Prev search result' })
+
+-- While the / or ? prompt is open (incsearch), move to next/prev match
+-- without leaving the prompt
+vim.opt.incsearch = true
+vim.opt.hlsearch = true
+vim.keymap.set('c', '<C-n>', function()
+  local t = vim.fn.getcmdtype()
+  return (t == '/' or t == '?') and '<C-g>' or '<C-n>'
+end, { expr = true, desc = 'Next match during incsearch' })
+vim.keymap.set('c', '<C-p>', function()
+  local t = vim.fn.getcmdtype()
+  return (t == '/' or t == '?') and '<C-t>' or '<C-p>'
+end, { expr = true, desc = 'Prev match during incsearch' })
 
 -- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
@@ -300,7 +319,7 @@ require('lazy').setup({
         --  All the info you're looking for is in `:help telescope.setup()`
         --
         defaults = {
-          file_ignore_patterns = { 'venv', 'logs', 'wandb', '__pycache__', '.aux' },
+          file_ignore_patterns = { 'venv', 'logs', 'wandb/', '__pycache__', '.aux' },
           -- mappings = {
           --   i = { ['<c-enter>'] = 'to_fuzzy_refine' },
           -- },
@@ -386,6 +405,21 @@ require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp',
     },
     config = function()
+      vim.diagnostic.config {
+        virtual_text = true,
+        signs = true,
+        update_in_insert = false,
+        underline = true,
+        severity_sort = true,
+        float = {
+          focusable = false,
+          style = 'minimal',
+          border = 'rounded',
+          source = 'always',
+          header = '',
+          prefix = '',
+        },
+      }
       -- Brief aside: **What is LSP?**
       --
       -- LSP is an initialism you've probably heard, but might not understand what it is.
@@ -565,6 +599,8 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'black',
+        'isort',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 

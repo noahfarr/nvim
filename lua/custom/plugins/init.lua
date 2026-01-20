@@ -27,14 +27,22 @@ return {
       vim.keymap.set('n', '<C-e>', function()
         harpoon.ui:toggle_quick_menu(harpoon:list())
       end)
-
-      -- Toggle previous & next buffers stored within Harpoon list
-      vim.keymap.set('n', '<C-p>', function()
-        harpoon:list():prev()
-      end)
-      vim.keymap.set('n', '<C-n>', function()
-        harpoon:list():next()
-      end)
     end,
+  },
+  {
+    'stevearc/oil.nvim',
+    config = function()
+      require('oil').setup {
+        view_options = {
+          show_hidden = true,
+        },
+      }
+      vim.keymap.set('n', '<leader>e', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
+    end,
+  },
+
+  {
+    'stevearc/dressing.nvim',
+    opts = {},
   },
 }
