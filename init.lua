@@ -81,6 +81,10 @@ vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 -- Switch to normal mode when pressing jj in insert mode
 vim.keymap.set('i', 'jj', '<Esc>')
 vim.keymap.set('i', 'jk', '<Esc>')
+vim.keymap.set('i', 'kj', '<Esc>')
+
+-- Henrik's keymaps
+vim.keymap.set('n', '<leader>w', ':w<CR>')
 
 -- Make <C-n>/<C-p> jump between search results
 -- Works in normal, visual and operator-pending modes
